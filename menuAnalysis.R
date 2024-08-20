@@ -76,7 +76,6 @@ menuData |> group_by(conditionID) |>
   theme(plot.title = element_text(hjust = 0.5)) + 
   geom_errorbar(aes(ymin=averageTime-se, ymax=averageTime+se), width=.3, position=position_dodge(.9)) 
   
-#!!!
 # stacked bar plot 
 menuData |> filter(betweenLastTime < 10000) |>
   group_by(conditionID) |>
@@ -392,7 +391,6 @@ menuData |>
   scale_fill_manual(values = c("#7ba7ed", "#fa96a2","#4b8cf2", "#d94355", "#0c4cb0", "#a30316"))
 
 
-#!!!
 # NUMBER OF CHORDS PER CONDITION
 menuData |>
   filter(betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1) |>
@@ -411,7 +409,6 @@ menuData |>
   labs(y = "Average Chords per Trial", x = "Condition ID", fill = "Menu Type") +
   scale_y_continuous(limits=c(0, 0.5), breaks = seq(0, 0.5, by = 0.1)) 
 
-#!!! added error bars
 # CT vs. SECTIONS ALL MENUS
 menuData |> 
   filter(time < 20000) |>
@@ -548,7 +545,6 @@ menuData |>
   ggtitle("Completion Time vs. Trial for 8x8 Chording Menu")
 
 
-# !!!
 # CHORDING TIME vs. SECTIONS ALL MENUS
 menuData |> 
   filter(betweenLastTime < 20000) |>
@@ -571,7 +567,6 @@ menuData |>
 
 
 
-#!!!
 # NUM OF TOTAL SELECTIONS vs. SECTIONS ALL MENUS
 menuData |> 
   mutate(section = (block - 1) %% 5 + 1) |>
@@ -613,7 +608,6 @@ menuData |>
   ggtitle("Average Num of Items Selected vs. Block for ONE Learning Block (All Menus)") + 
   facet_wrap(. ~ menuType)
 
-#!!!
 # NUM MENUS SELECTED vs. SECTIONS ALL MENUS
 menuData |> 
   mutate(section = (block - 1) %% 5 + 1) |>
@@ -633,7 +627,6 @@ menuData |>
   ggtitle("Average Num of Menus Selected vs. Block for ONE Learning Block (All Menus)") + 
   facet_wrap(. ~ menuType)
 
-# !!!
 menuData |> 
   mutate(type = if_else(betweenLastTime < 200 & itemsPressed == 1 & menusPressed ==1,
                         "Chord",
@@ -712,7 +705,6 @@ menuDataLonger |>
     geom_hline(yintercept = 200, color = 'red',linetype="dotted") +
     labs(x = "Block Number", y = "Average Chording Time")
 
-#!!!
 menuDataLonger |> 
   filter(betweenLastTime < 50000) |>
   select(conditionID, block, betweenLastTime) |>
@@ -733,7 +725,6 @@ menuDataLonger |>
   geom_hline(yintercept = 200, color = 'black',linetype="dotted") +
   scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) 
 
-# !!!
 menuDataLonger |>
   filter(betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1) |>
   select(conditionID, block, betweenLastTime) |>
@@ -752,7 +743,6 @@ menuDataLonger |>
   labs(y = "Average Chords per Menu (Farren's Test Data)", x = "Condition ID", fill = "Menu Type") +
   scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) 
 
-#!!!
 # NUMBER OF CHORDS PER CONDITION
 menuDataLonger |>
   filter(betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1) |>
@@ -843,7 +833,7 @@ trialPlot2 <- stream |> filter(conditionID == "8x8 Chording", pID == 22, block =
   scale_color_manual(name = "issue", values = brewer.pal(12, "Set3"), guide = "none")
 
 
-ggarrange(trialPlot1, trialPlot2, labels = c("pID: 22", "pID: 22"))
+
 
 trialPlot4 <- stream |> filter(conditionID == "8x8 Chording", pID == 24, block == 5, trial == 3) |>
   select(event, time) |>
@@ -881,7 +871,7 @@ trialPlot3 <- stream |> filter(conditionID == "8x8 Chording", pID == 24, block =
   scale_colour_discrete(drop=TRUE, limits = levels(stream$event)) + 
   theme(legend.position="none")
 
-ggarrange(trialPlot3, trialPlot4, labels = c("pID: 24", "pID: 24"))
+
 
 
 
@@ -920,6 +910,9 @@ trialPlot6 <- stream |> filter(conditionID == "8x8 Chording", pID == 32, block =
   aes(color = event) +
   scale_color_manual(name = "issue", values = brewer.pal(12, "Set3"), guide = "none")
 
+ggarrange(trialPlot1, trialPlot2, labels = c("pID: 22", "pID: 22"))
+
+ggarrange(trialPlot3, trialPlot4, labels = c("pID: 24", "pID: 24"))
 
 ggarrange(trialPlot5, trialPlot6, labels = c("pID: 32", "pID: 32"))
 
@@ -932,12 +925,49 @@ ggarrange(trialPlot5, trialPlot6, labels = c("pID: 32", "pID: 32"))
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# !!!
 # LONGER TRIALS 8 ITEMS 10 BLOCKS 
 # 4 PARTICIPANTS 
 
-long_data <- read_csv("menusTrialData_2024-07-23.csv")
+long_data <- read_csv("menusTrialData_2024-07-29.csv") |> filter(pID == 55 | pID > 57) 
 
-long_data |> filter(pID > 40 & betweenLastTime < 400 & menusPressed == 1 & itemsPressed == 1) |>
+#!!!
+long_data |>
+  filter(betweenLastTime < 400 & menusPressed == 1 & itemsPressed == 1) |>
   group_by(conditionID) |>
   summarise(count = n()) |>
   mutate(count = count / (80*4)) |>
@@ -945,12 +975,12 @@ long_data |> filter(pID > 40 & betweenLastTime < 400 & menusPressed == 1 & items
   ggplot(aes(x = conditionID, y = count, fill = type)) +
   geom_bar(stat = "identity") + 
   ggtitle("Ratio of Chords vs. Menu") +
-  labs(y = "Average Chords per Trial", x = "Condition ID", fill = "Menu Type") +
+  labs(y = "Average Chords (< 400ms) per Trial", x = "Condition ID", fill = "Menu Type") +
   scale_y_continuous(limits=c(0, 1), breaks = seq(0, 1, by = 0.2)) 
 
-
+# !!!
 # AVERAGE CHORDS OVER TIME PER MENU TYPE
-long_data |> filter(pID > 40 & betweenLastTime < 300 & menusPressed == 1 & itemsPressed == 1) |>
+long_data |> filter(betweenLastTime < 300 & menusPressed == 1 & itemsPressed == 1) |>
   group_by(block, conditionID) |>
   summarise(count = n()/24) |>
   mutate(type = substring(conditionID, 5, nchar(conditionID))) |>
@@ -970,7 +1000,7 @@ long_data |> filter(pID > 40 & betweenLastTime < 400 & menusPressed == 1 & items
   print(n = 50) |>
   ggplot(aes(x = block, y = count, color = pID)) +
   geom_line() + 
-  ggtitle("Ratio of Chords vs. Menu") +
+  ggtitle("Ratio of Chords vs. Participant ID in 8x8 Radial") +
   labs(y = "Average Chords per Trial", x = "Block", fill = "Menu Type") +
   scale_y_continuous(limits=c(0, 1), breaks = seq(0, 1, by = 0.2)) +
   scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) 
@@ -1031,9 +1061,9 @@ long_data |>
 
 # RADIAL MENU
 # different lines for participants 
-# CT 
+# COMPLETION TIME
 long_data |> 
-  filter(betweenLastTime < 10000, pID > 40) |>
+  filter(time < 20000, pID > 40) |>
   select(conditionID, block, time, pID) |>
   unite(group, c(conditionID, block), sep = " ", remove = FALSE) |>
   group_by(group, pID) |>
@@ -1048,17 +1078,17 @@ long_data |>
   geom_line() +  
   #geom_point() +
   #geom_errorbar(aes(ymin=averageTime-se, ymax=averageTime+se), width=.3, position=position_dodge(.9), colour = "black") +
-  labs(x = "Block", y = "Average Chording Time (millis)", colour = "Participant ID") +
-  ggtitle("Participant ID vs. Chording Time over 10 blocks in Radial (4 participants)") + 
+  labs(x = "Block", y = "Average Time (millis)", colour = "Participant ID") +
+  ggtitle("Participant ID vs. Completion Time over 10 blocks in Radial (4 participants)") + 
   facet_wrap(. ~ menuType) + 
   scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) + 
   scale_color_manual(name = "issue", values = brewer.pal(12, "Set1"))
 
 # KEYBOARD MENU
 # different lines for participants 
-# CT 
+# COMPLETION TIME
 long_data |> 
-  filter(betweenLastTime < 10000, pID > 40) |>
+  filter(time < 20000, pID > 40) |>
   select(conditionID, block, time, pID) |>
   unite(group, c(conditionID, block), sep = " ", remove = FALSE) |>
   group_by(group, pID) |>
@@ -1073,16 +1103,16 @@ long_data |>
   geom_line() +  
   #geom_point() +
   #geom_errorbar(aes(ymin=averageTime-se, ymax=averageTime+se), width=.3, position=position_dodge(.9), colour = "black") +
-  labs(x = "Block", y = "Average Chording Time (millis)", colour = "Participant ID") +
-  ggtitle("Participant ID vs. Chording Time over 10 blocks in Keyboard (4 participants)") + 
+  labs(x = "Block", y = "Average Completion Time (millis)", colour = "Participant ID") +
+  ggtitle("Participant ID vs. Time over 10 blocks in Keyboard (4 participants)") + 
   facet_wrap(. ~ menuType) + 
   scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) + 
   scale_color_manual(name = "issue", values = brewer.pal(12, "Set1"))
 
-
+# !!!
 long_data |>
   filter(time < 20000) |>
-  mutate(section = (block - 1) %% 5 + 1) |>
+  mutate(section = (block - 1) %% 10 + 1) |>
   select(conditionID, block, time, section) |>
   unite(group, c(conditionID, section), sep = " ", remove = FALSE) |>
   group_by(group) |>
@@ -1097,50 +1127,115 @@ long_data |>
   geom_errorbar(aes(ymin=averageTime-se, ymax=averageTime+se), width=.3, position=position_dodge(.9), colour = "black") +
   labs(x = "Block", y = "Average Completion Time (millis)", colour = "Menu Type") +
   ggtitle("Completion Time vs. Block (All Menus)") + 
-  facet_wrap(. ~ menuType)
+  facet_wrap(. ~ menuType) +
+  scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) 
+
+
+# !!!
+# CHORDING TIME PER MENU OVER BLOCKS
+long_data |>
+  filter(betweenLastTime < 20000) |>
+  mutate(section = (block - 1) %% 10 + 1) |>
+  select(conditionID, block, betweenLastTime, section) |>
+  unite(group, c(conditionID, section), sep = " ", remove = FALSE) |>
+  group_by(group) |>
+  summarise(averageTime = mean(betweenLastTime),
+            se = sd(betweenLastTime, na.rm = TRUE)/sqrt(length(betweenLastTime))) |>
+  mutate(block = as.numeric(trimws(substring(group, nchar(group)-1, nchar(group))))) |>
+  mutate(conditionID = trimws(substring(group, 4, nchar(group)-2))) |>
+  mutate(menuType = substring(group, 0, 3)) |>
+  ggplot(aes(x = block, y = averageTime, colour = conditionID)) +
+  geom_line() + 
+  geom_point() +
+  geom_errorbar(aes(ymin=averageTime-se, ymax=averageTime+se), width=.3, position=position_dodge(.9), colour = "black") +
+  labs(x = "Block", y = "Average Chording Time (millis)", colour = "Menu Type") +
+  ggtitle("Completion Time vs. Block (All Menus)") + 
+  facet_wrap(. ~ menuType) + 
+  scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) + 
+  scale_y_continuous(limits=c(0, 1850), breaks = seq(0, 1850, by = 200)) 
+
+
+# CHORDING TIME PER MENU OVER BLOCKS
+long_data |>
+  filter(betweenLastTime < 20000) |>
+  mutate(section = (block - 1) %% 10 + 1) |>
+  select(conditionID, block, betweenLastTime, section, menusPressed, itemsPressed, pID) |>
+  unite(group, c(conditionID, section), sep = " ", remove = FALSE) |>
+  mutate(block = as.numeric(trimws(substring(group, nchar(group)-1, nchar(group))))) |>
+  mutate(conditionID = trimws(substring(group, 4, nchar(group)-2))) |>
+  mutate(menuType = substring(group, 0, 3)) |>
+  mutate(chording = if_else(betweenLastTime < 400 & menusPressed == 1 & itemsPressed == 1, 1, 0)) |>
+  group_by(group) |>
+  summarise(percent = sum(chording) / (8*4),
+            se = sd(chording, na.rm = TRUE)/sqrt(length(chording))) |>
+  mutate(block = as.numeric(trimws(substring(group, nchar(group)-1, nchar(group))))) |>
+  mutate(conditionID = trimws(substring(group, 4, nchar(group)-2))) |>
+  mutate(menuType = substring(group, 0, 3)) |>
+  print(n = 30) |>
+  ggplot(aes(x = block, y = percent, colour = conditionID)) +
+  geom_line() + 
+  geom_point() +
+  geom_errorbar(aes(ymin=percent-se, ymax=percent+se), width=.3, position=position_dodge(.9), colour = "black") +
+  labs(x = "Block", y = "Average Chords (ratio)", colour = "Menu Type") +
+  ggtitle("Number of Chords (<400ms) vs. Block (All Menus)") + 
+  facet_wrap(. ~ menuType) + 
+  scale_x_continuous(limits=c(0.5, 10.5), breaks = seq(1, 10, by = 1)) + 
+  scale_y_continuous(limits=c(0, 1), breaks = seq(0, 1, by = 0.1)) 
 
 
 
 
-
+# Categories of selections in 8x8 Radial menus 
 long_data |> filter(pID > 40, conditionID == "8x8 Radial") |>
   mutate(pID = as_factor(pID)) |>
   group_by(block) |>
-  summarise(oneOffCount = sum(oneOffItem == TRUE | oneOffMenu == TRUE),
+  summarise(oneOffCount = sum((oneOffItem == TRUE | oneOffMenu == TRUE) & betweenLastTime <= 200),
+            
             chordingCount = sum(betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1),
-            fireFix = sum(betweenFirstTime < 200 & (menusPressed > 1 | itemsPressed > 1)),
-            visualSearch = sum((menusPressed > 1 | itemsPressed > 1) & betweenFirstTime >= 200 )) |>
+            
+            slowChordingCount = sum(menusPressed == 1 & itemsPressed == 1 & betweenLastTime >= 200),
+            
+            fireFix = sum(betweenFirstTime <= 200 & (menusPressed > 1 | itemsPressed > 1) & !(oneOffItem == TRUE | oneOffMenu == TRUE))) |>
+  mutate(visualSearch = 32 - oneOffCount - chordingCount - slowChordingCount - fireFix) |>
   print(n = 10) |>
   pivot_longer(cols = oneOffCount:visualSearch, names_to = "type", values_to = "count") |>
-  
   ggplot(aes(x = block, y = count, color = type)) +
+  ggtitle("Categories of Selections over Blocks in 8x8 Radial Menu") +
   geom_line() +
+  scale_x_continuous(limits = c(1, 10), breaks = seq(1,10, by = 1)) + 
   scale_color_manual(name = "issue", values = brewer.pal(12, "Set1"))
 
-long_data |> filter(pID > 40, conditionID == "8x8 Chording") |>
+
+
+# Categories of selections in 4x4 Radial menus 
+long_data |> filter(conditionID == "4x4 Radial") |>
   mutate(pID = as_factor(pID)) |>
-  mutate(strat = if_else((oneOffItem == TRUE | oneOffMenu == TRUE), "oneOff", 
-                 if_else((betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1), "chording",
-                 if_else((betweenFirstTime < 200 & (menusPressed > 1 | itemsPressed > 1)), "fireFix",
-                         "visualSearch")))) |>
-  mutate(strat = as_factor(strat)) |>
   group_by(block) |>
-  summarise(count = n())
-  ggplot(aes(x = block, y = strat, fill = strat)) +
-  geom_bar(stat = "identity") +
+  summarise(oneOffCount = sum((oneOffItem == TRUE | oneOffMenu == TRUE) & betweenLastTime <= 200),
+            
+            chordingCount = sum(betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1),
+            
+            slowChordingCount = sum(menusPressed == 1 & itemsPressed == 1 & betweenLastTime >= 200),
+            
+            fireFix = sum(betweenFirstTime <= 200 & (menusPressed > 1 | itemsPressed > 1) & !(oneOffItem == TRUE | oneOffMenu == TRUE))) |>
+  mutate(visualSearch = 32 - oneOffCount - chordingCount - slowChordingCount - fireFix) |>
+  print(n = 10) |>
+  pivot_longer(cols = oneOffCount:visualSearch, names_to = "type", values_to = "count") |>
+  ggplot(aes(x = block, y = count, color = type)) +
+  ggtitle("Categories of Selections over Blocks in 4x4 Radial Menu") +
+  geom_line() +
+  scale_x_continuous(limits = c(1, 10), breaks = seq(1,10, by = 1)) + 
   scale_color_manual(name = "issue", values = brewer.pal(12, "Set1"))
+  
+  
+  
+  
+  
+  
+  
+  
+streamLong <- read_csv("menusStreamData_2024-07-29.csv") 
 
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-streamLong <- read_csv("menusStreamData_2024-07-23.csv") 
 
 streamLongPlot1 <- streamLong |> filter(conditionID == "8x8 Radial", pID == 43, block == 1, trial == 2) |>
   select(event, time) |>
@@ -1185,7 +1280,9 @@ streamLongPlot2 <- streamLong |> filter(conditionID == "8x8 Radial", pID == 43, 
   labs(x = "Time (secs)")
 
 
-ggarrange(streamLongPlot1, streamLongPlot2, labels = c("pID: 32", "pID: 32"))
+#!!!
+# STREAM LOG CHART EXAMPLE
+ggarrange(streamLongPlot1, streamLongPlot2, labels = c("pID: 43", "pID: 43"))
 
 
 
@@ -1194,41 +1291,47 @@ ggarrange(streamLongPlot1, streamLongPlot2, labels = c("pID: 32", "pID: 32"))
 
 
 
-#ADAMS DATA 
 
-adam_data <- read_csv("menusTrialData_2024-07-25.csv") |> print(n = 4)
+streamPlot3 <- stream |> filter(conditionID == "8x8 Chording") |>
+  tail(n = 10) |>
+  print(n = 50)
+  select(event, time) |>
+  mutate(toSub = time[1]) |>
+  filter(event != "error") |>
+  separate(event, c("position", "event"), ":") |>
+  filter(position != "") |>
+  pivot_wider(names_from = event, values_from = time) |>
+  unnest() |>
+  mutate(type = if_else(position %in% c('q','w','e','r','a','s','d','f'),"Menu","Item")) |>
+  mutate(down = (down - toSub) / 1000, up = (up - toSub)/1000) |>
+  print(n = 50) |>
+  gg_vistime(col.event = "position", col.group = "type", col.start = "down", col.end = "up", show_labels = TRUE, optimize_y = FALSE, title = "1st time seeing item") +
+  scale_x_continuous(limits=c(0, 8), breaks = seq(0, 8, by = 1)) + 
+  labs(x = "Time (secs)") + 
+  aes(color = event) +
+  scale_color_manual(name = "issue", values = brewer.pal(12, "Set3"), guide = "none")
+
+streamPlot4 <- stream |> filter(conditionID == "8x8 Chording", pID == 55, block == 5, trial == 4) |>
+  select(event, time) |>
+  mutate(toSub = time[1]) |>
+  filter(event != "error") |>
+  separate(event, c("position", "event"), ":") |>
+  filter(position != "") |>
+  pivot_wider(names_from = event, values_from = time) |>
+  unnest() |>
+  mutate(type = if_else(position %in% c('q','w','e','r','a','s','d','f'),"Menu","Item")) |>
+  mutate(down = (down - toSub) / 1000, up = (up - toSub)/1000) |>
+  print(n = 50) |>
+  gg_vistime(col.event = "position", col.group = "type", col.start = "down", col.end = "up", show_labels = TRUE, optimize_y = FALSE, title = "5th time seeing item") +
+  scale_x_continuous(limits=c(0, 8), breaks = seq(0, 8, by = 1)) + 
+  labs(x = "Time (secs)") + 
+  aes(color = event) +
+  scale_color_manual(name = "issue", values = brewer.pal(12, "Set3"), guide = "none")
+
+ggarrange(streamPlot3, streamPlot4, labels = c("pID: 43", "pID: 43"))
 
 
-# !!! chording time vs block
-adam_data |> 
-  filter(participantID == "Adam") |>
-  select(conditionID, block, betweenLastTime) |>
-  unite(group, c(conditionID, block), sep = " ", remove = FALSE) |>
-  group_by(group) |>
-  summarise(averageTime = mean(betweenLastTime),
-            se = sd(betweenLastTime, na.rm = TRUE)/sqrt(length(betweenLastTime))) |>
-  mutate(block = as.numeric(trimws(substring(group, nchar(group)-1, nchar(group))))) |>
-  mutate(conditionID = trimws(substring(group, 4, nchar(group)-2))) |>
-  mutate(menuType = substring(group, 0, 3)) |>
-  ggplot(aes(x = block, y = averageTime, colour = conditionID)) +
-  geom_line() + 
-  geom_point() +
-  geom_errorbar(aes(ymin=averageTime-se, ymax=averageTime+se), width=.3, position=position_dodge(.9), colour = "black") +
-  labs(x = "Block", y = "Average Chording Time (millis)", colour = "Menu Type") +
-  ggtitle("Chording Time vs. Block for All Menus (Adam)") + 
-  facet_wrap(. ~ menuType) + 
-  geom_hline(yintercept = 400, color = 'black',linetype="dotted") +
-  scale_x_continuous(limits=c(1, 10), breaks = seq(1, 10, by = 1)) +
-  scale_y_continuous(limits=c(0, 1600), breaks = seq(0, 1600, by = 200)) 
 
-adam_data |> filter(participantID == "Adam" & betweenLastTime < 200 & menusPressed == 1 & itemsPressed == 1) |>
-  group_by(conditionID) |>
-  summarise(count = n()) |>
-  mutate(count = count / (80)) |>
-  mutate(type = substring(conditionID, 5, nchar(conditionID))) |>
-  ggplot(aes(x = conditionID, y = count, fill = type)) +
-  geom_bar(stat = "identity") + 
-  ggtitle("Ratio of Chords vs. Menu") +
-  labs(y = "Average Chords per Trial", x = "Condition ID", fill = "Menu Type") +
-  scale_y_continuous(limits=c(0, 1), breaks = seq(0, 1, by = 0.2)) 
+
+
 
